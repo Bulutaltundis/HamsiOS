@@ -1,8 +1,9 @@
 #include "terminal.h"
 
+#include <stdint.h>
+
 #define VGA_WIDTH 80
 #define VGA_HEIGHT 25
-
 #define TERMINAL_START_ROW 6
 
 static volatile uint16_t* const VGA =
@@ -88,6 +89,22 @@ void terminal_putchar(char c)
         return;
     }
 
+    if (c == '\b')
+    {
+        terminal_backspace();
+        return;
+    }
+
+    if (c == '\t')
+    {
+        int spaces = 4 - (col % 4);
+
+        for (int i = 0; i < spaces; i++)
+            terminal_putchar(' ');
+
+        return;
+    }
+
     if (col >= VGA_WIDTH)
         terminal_newline();
 
@@ -96,9 +113,6 @@ void terminal_putchar(char c)
         (uint8_t)c;
 
     col++;
-
-    if (col >= VGA_WIDTH)
-        terminal_newline();
 }
 
 void terminal_print(const char* text)
@@ -110,6 +124,23 @@ void terminal_print(const char* text)
     }
 }
 
+void terminal_backspace(void)
+{
+    if (col <= 0)
+        return;
+
+    col--;
+
+    VGA[row * VGA_WIDTH + col] =
+        ((uint16_t)color << 8) | ' ';
+}
+
+void terminal_delete(void)
+{
+    VGA[row * VGA_WIDTH + col] =
+        ((uint16_t)color << 8) | ' ';
+}
+
 int terminal_row(void)
 {
     return row;
@@ -118,4 +149,22 @@ int terminal_row(void)
 int terminal_col(void)
 {
     return col;
+}
+
+void terminal_set_cursor(int new_row, int new_col)
+{
+    if (new_row < TERMINAL_START_ROW)
+        new_row = TERMINAL_START_ROW;
+
+    if (new_row >= VGA_HEIGHT)
+        new_row = VGA_HEIGHT - 1;
+
+    if (new_col < 0)
+        new_col = 0;
+
+    if (new_col >= VGA_WIDTH)
+        new_col = VGA_WIDTH - 1;
+
+    row = new_row;
+    col = new_col;
 }

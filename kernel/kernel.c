@@ -78,7 +78,7 @@ void kernel_main(void)
     );
 
     print(
-        "          HAMSI OS v0.4                 ",
+        "          HAMSI OS v0.6                 ",
         3,
         20
     );
