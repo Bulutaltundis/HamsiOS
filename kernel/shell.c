@@ -1,6 +1,7 @@
 #include "shell.h"
 #include "memory.h"
 #include "terminal.h"
+#include "multiboot.h"
 
 #include <stdint.h>
 
@@ -193,6 +194,7 @@ void shell_handle_command(
         terminal_print("  echo       Print text\n");
         terminal_print("  mem        Show memory information\n");
         terminal_print("  alloc      Allocate kernel memory\n");
+        terminal_print("  memmap     Show physical memory map\n");
     }
     else if (string_equals(command, "clear"))
     {
@@ -216,6 +218,10 @@ void shell_handle_command(
     else if (string_equals(command, "mem"))
     {
         command_mem();
+    }
+    else if (string_equals(command, "memmap"))
+    {
+        multiboot_print_memory_map();
     }
     else if (starts_with(command, "alloc "))
     {

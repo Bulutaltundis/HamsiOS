@@ -7,7 +7,7 @@
 #include "shell.h"
 #include "terminal.h"
 #include "memory.h"
-
+#include "multiboot.h"
 
 volatile uint16_t* const VGA_MEMORY =
     (uint16_t*)0xB8000;
@@ -60,9 +60,13 @@ static void print(
    Kernel entry
    --------------------------------------------------------- */
 
-void kernel_main(void)
+void kernel_main(uint32_t multiboot_info)
 {
     clear_screen();
+
+    terminal_init();
+
+    multiboot_parse(multiboot_info);
 
     terminal_init();
 

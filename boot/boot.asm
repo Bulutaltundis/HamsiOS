@@ -25,6 +25,11 @@ _start:
 
     mov esp, stack_top
 
+    ; GRUB:
+    ; EAX = Multiboot2 magic
+    ; EBX = Multiboot2 bilgi yapısının adresi
+
+    push ebx
     call kernel_main
 
 .hang:
