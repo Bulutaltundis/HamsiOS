@@ -5,6 +5,7 @@
 #include "pic.h"
 #include "keyboard.h"
 #include "shell.h"
+#include "memory.h"
 
 
 volatile uint16_t* const VGA_MEMORY =
@@ -165,6 +166,20 @@ void kernel_main(void)
     /*
      * Shell
      */
+
+    print(
+        "[ .. ] Initializing memory manager...",
+        11,
+        20
+    );
+
+    memory_init();
+
+    print(
+        "[ OK ] Memory manager initialized",
+        11,
+        20
+    );
 
     shell_init();
 
