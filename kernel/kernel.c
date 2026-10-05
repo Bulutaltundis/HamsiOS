@@ -5,6 +5,7 @@
 #include "pic.h"
 #include "keyboard.h"
 #include "shell.h"
+#include "terminal.h"
 #include "memory.h"
 
 
@@ -62,6 +63,8 @@ static void print(
 void kernel_main(void)
 {
     clear_screen();
+
+    terminal_init();
 
 
     /*

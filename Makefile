@@ -15,6 +15,7 @@ OBJECTS=\
 	pic.o \
 	keyboard.o \
 	memory.o \
+	terminal.o \
 	shell.o
 
 all: hamsios.iso
@@ -45,6 +46,9 @@ keyboard.o: kernel/keyboard.c
 
 memory.o: kernel/memory.c
 	$(CC) $(CFLAGS) -c kernel/memory.c -o memory.o
+
+terminal.o: kernel/terminal.c
+	$(CC) $(CFLAGS) -c kernel/terminal.c -o terminal.o
 
 shell.o: kernel/shell.c
 	$(CC) $(CFLAGS) -c kernel/shell.c -o shell.o
