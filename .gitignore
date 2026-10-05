@@ -1,0 +1,11 @@
+*.o
+*.bin
+*.iso
+*.img
+*.elf
+*.map
+
+build/
+dist/
+
+.DS_Store
