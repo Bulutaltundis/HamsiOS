@@ -2,6 +2,7 @@
 #include "memory.h"
 #include "terminal.h"
 #include "multiboot.h"
+#include "frame.h"
 
 #include <stdint.h>
 
@@ -193,8 +194,10 @@ void shell_handle_command(
         terminal_print("  uname      Show system information\n");
         terminal_print("  echo       Print text\n");
         terminal_print("  mem        Show memory information\n");
-        terminal_print("  alloc      Allocate kernel memory\n");
         terminal_print("  memmap     Show physical memory map\n");
+        terminal_print("  frames     Show physical frame information\n");
+        terminal_print("  framealloc Allocate one physical frame\n");
+        terminal_print("  alloc      Allocate kernel memory\n");
     }
     else if (string_equals(command, "clear"))
     {
@@ -209,7 +212,7 @@ void shell_handle_command(
     }
     else if (string_equals(command, "version"))
     {
-        terminal_print("HamsiOS v0.6\n");
+        terminal_print("HamsiOS v0.7\n");
     }
     else if (string_equals(command, "uname"))
     {
@@ -222,6 +225,43 @@ void shell_handle_command(
     else if (string_equals(command, "memmap"))
     {
         multiboot_print_memory_map();
+    }
+    else if (string_equals(command, "frames"))
+    {
+        terminal_print("Physical Frames\n");
+        terminal_print("----------------\n");
+
+        terminal_print("Frame size : ");
+        print_number(FRAME_SIZE);
+        terminal_print(" bytes\n");
+
+        terminal_print("Total      : ");
+        print_number(frame_total());
+        terminal_print("\n");
+
+        terminal_print("Used       : ");
+        print_number(frame_used());
+        terminal_print("\n");
+
+        terminal_print("Free       : ");
+        print_number(frame_free_count());
+        terminal_print("\n");
+    }
+    else if (string_equals(command, "framealloc"))
+    {
+        uint32_t address = frame_alloc();
+
+        if (address == 0)
+        {
+            terminal_print("No free frames.\n");
+            return;
+        }
+
+        terminal_print("Allocated frame: 0x");
+
+        print_hex(address);
+
+        terminal_print("\n");
     }
     else if (starts_with(command, "alloc "))
     {

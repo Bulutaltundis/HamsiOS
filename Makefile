@@ -1,6 +1,6 @@
 AS=nasm
-CC=gcc
-LD=ld
+CC=i686-elf-gcc
+LD=i686-elf-ld
 
 CFLAGS=-m32 -ffreestanding -fno-pie -fno-stack-protector -nostdlib -nostartfiles -nodefaultlibs -Wall -Wextra
 LDFLAGS=-m elf_i386 -T linker.ld
@@ -17,6 +17,7 @@ OBJECTS=\
 	memory.o \
 	terminal.o \
 	multiboot.o \
+        frame.o \
 	shell.o
 
 all: hamsios.iso
@@ -54,6 +55,9 @@ multiboot.o: kernel/multiboot.c
 terminal.o: kernel/terminal.c
 	$(CC) $(CFLAGS) -c kernel/terminal.c -o terminal.o
 
+frame.o: kernel/frame.c
+	$(CC) $(CFLAGS) -c kernel/frame.c -o frame.o
+
 shell.o: kernel/shell.c
 	$(CC) $(CFLAGS) -c kernel/shell.c -o shell.o
 
@@ -64,7 +68,7 @@ iso/boot/hamsios.bin: hamsios.bin
 	cp hamsios.bin iso/boot/hamsios.bin
 
 hamsios.iso: iso/boot/hamsios.bin iso/boot/grub/grub.cfg
-	grub-mkrescue -o hamsios.iso iso
+	i686-elf-grub-mkrescue -o hamsios.iso iso
 
 run: hamsios.iso
 	qemu-system-i386 -cdrom hamsios.iso

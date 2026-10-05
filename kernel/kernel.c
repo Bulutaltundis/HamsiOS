@@ -8,6 +8,7 @@
 #include "terminal.h"
 #include "memory.h"
 #include "multiboot.h"
+#include "frame.h"
 
 volatile uint16_t* const VGA_MEMORY =
     (uint16_t*)0xB8000;
@@ -181,6 +182,7 @@ void kernel_main(uint32_t multiboot_info)
     );
 
     memory_init();
+    frame_init();
 
     print(
         "[ OK ] Memory manager initialized",
